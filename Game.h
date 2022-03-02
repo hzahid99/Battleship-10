@@ -128,5 +128,7 @@ public:
 	 * @return None
 	 */
 	void play();
+
+	void playAI();
 };
 #endif

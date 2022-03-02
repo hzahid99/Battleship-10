@@ -198,5 +198,7 @@ public:
 	string *markPrivate(string strike, int row, int col, int hitship, bool isHit);
 
 	void markPublicSunk(string *posArr, int size);
+
+	bool shipPresent(int row, int col);
 };
 #endif

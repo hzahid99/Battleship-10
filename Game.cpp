@@ -58,7 +58,7 @@ char Game::getChar()
 
 void Game::setup()
 {
-    cout << "\nWelcome to Battleship!\nBelow are the symbols you will see on the boards and what they mean:\n";
+    cout << "\nBelow are the symbols you will see on the boards and what they mean:\n";
     cout << "S followed by a number represents a ship and its number\n";
     cout << "M means an attack has missed\nH means a ship was hit\nX means the ship in place is sunk\n\n";
 

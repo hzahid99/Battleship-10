@@ -194,14 +194,14 @@ string *Player::markPrivate(string strike, int row, int col, int hitship, bool i
         {
             // put an H on the board at row col
             m_privateBoard->setBoard(strike, row, col);
-            std::cout << "\nShip " << hitship << " was hit \n";
+            std::cout << "\nShip " << hitship << " was hit \n\n";
         }
     }
     else
     {
         // puts an M on the board at row col
         m_privateBoard->setBoard(strike, row, col);
-        std::cout << "\nYour attack missed! \n";
+        std::cout << "\nAttack missed! \n\n";
     }
     // if wasn't sunk it will return an empty arr so nothing will get marked
     return {};
@@ -218,13 +218,13 @@ void Player::placeShip(Ship *someShip)
 
         m_privateBoard->setBoard(symbol, row, col); // Set the element in the Private Board at this index equal to symbol
     }
-    cout << "\nShip " << someShip->getSize() << " was placed!\n";
+    //cout << "\nShip " << someShip->getSize() << " was placed!\n";
     m_shipCounter++;
 }
 
 void Player::printPrivateBoard()
 {
-    cout << "Here is your current board:\n\n";
+    cout << "\nHere is your current board:\n\n";
     cout << "\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ\n";
     for (int i = 0; i < 10; i++)
     {
@@ -356,4 +356,24 @@ Ship **Player::getShips()
 {
     // Return m_ships
     return m_ships;
+}
+
+bool Player::shipPresent(int row, int col)
+{
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            if (m_privateBoard->at(row,col) == "M" || m_privateBoard->at(row,col) == "*" || m_privateBoard->at(row,col) == "H" || m_privateBoard->at(row,col) == "X")
+            {
+                return false;
+            }
+            
+            return true;
+        }
+
+        return true;
+        
+    }
+    
 }
