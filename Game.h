@@ -21,6 +21,7 @@ private:
 	// Second player of the game
 	Player *player2;
 
+	//For the added feature to the game. Determines after how many atacks to switch turns.
 	int attackNum;
 
 public:
