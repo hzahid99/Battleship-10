@@ -28,6 +28,9 @@ private:
 	int mediumHit[2];
 	bool adjacentHit;
 
+	//For the added feature to the game. Determines after how many atacks to switch turns.
+	int attackNum;
+
 
 public:
 	/*

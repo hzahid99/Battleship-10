@@ -1,4 +1,5 @@
 #include "AI.h"
+#include "limits"
 
 using namespace std;
 
@@ -122,10 +123,41 @@ void AI::setup()
     {
         do
         {
-            cout << "Please enter a number bw 1 and 3: ";
+            cout << "Please enter a number between 1 and 3 (including both): ";
             cin >> difficulty;
+            while (std::cin.fail()) //Data Type Validation
+            {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "\nInvalid data type entered. Difficulty must be an integer value.\nEnter again: ";
+                std::cin >> difficulty;
+            }
+
         } while (difficulty < 1 || difficulty > 3);
     }
+
+    cout << "After how many attacks (1 to 3) would you like to switch turns?\nChoice: ";
+    cin >> attackNum;
+    while (std::cin.fail()) //Data Type Validation
+	{
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cout << "Invalid data type entered. Attack Number must be an integer value (1-3).\nEnter again: ";
+		std::cin >> attackNum;
+	}
+    while (!(attackNum >= 1 && attackNum <= 3 )) //Checks if the input is [1,3]
+    {
+        cout << "Attack Number must be from 1 to 3.\nEnter again: ";
+        cin >> attackNum;
+        while (std::cin.fail()) //Data Type Validation
+		{
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::cout << "Invalid data type entered. Attack Number must be an integer value (1-3).\nEnter again: ";
+			std::cin >> attackNum;
+		}
+    }
+    
 
     player1 = new Player(numShips);
     opponent = new Player(numShips);
@@ -334,15 +366,28 @@ bool AI::gameover()
 
 void AI::turn(int currentPlayer) // passes control over to the takeTurn function
 {
-
+    int countPlayer = 1;
+    int countAI = 1;
     if (currentPlayer == 1)
     {
-        std::cout << "Player 1's turn\n";
-        takeTurnPlayer();
+        do
+        {
+            std::cout << "Player 1's turn\n";
+            cout << "\nAttack number " << countPlayer << "\n\n";
+            takeTurnPlayer();
+            countPlayer++;
+        } while (countPlayer <= attackNum);
+        
     }
     else
     {
-        takeTurnAI(difficulty);
+        do
+        {
+            cout << "\nAttack number " << countAI << "\n\n";
+            takeTurnAI(difficulty);
+            countAI++;
+        } while (countAI <= attackNum);
+        cout << "AI has completed its turn!\n";
     }
 }
 
@@ -351,42 +396,43 @@ void AI::takeTurnPlayer()
     int row = -1;
     int col = -1;
     char temp = '\0';
+    int count = 0;
 
     player1->view(); // prints the boards and ship health
 
-    do // stuck in a loop until the player produces a valid attack location
-    {
-        row = -1;
-        col = -1;
-
-        while (!(row >= 0 && row < 10)) // Gets an attack row and only accepts it if it's within board
+        do // stuck in a loop until the player produces a valid attack location
         {
             row = -1;
-            std::cout << "Select attack row: ";
-            row = getInt();
-            row -= 1;
-
-            if (row < 0 || row > 9)
-            {
-                std::cout << "Invalid row choice. Please try again.\n";
-            }
-        }
-        while (!(col >= 0 && col < 10)) // Gets an attack col and escapes the loop if the coordinate is inside the board region
-        {
             col = -1;
-            std::cout << "Select attack column: ";
-            temp = getChar();
-            col = (int(temp) - 65);
 
-            if (col < 0 || col > 9)
+            while (!(row >= 0 && row < 10)) // Gets an attack row and only accepts it if it's within board
             {
-                std::cout << "Invalid column choice. Please try again.\n";
-            }
-        }
-    } while (!validAttack(player1, row, col)); // checks to see if the attack location is a spot that the player has already fired on
+                row = -1;
+                std::cout << "Select attack row: ";
+                row = getInt();
+                row -= 1;
 
-    attack(player1, opponent, row, col); // actually figures out if it's a hit or miss and marks the boards
-    player1->view();                     // Prints the board again showing the attack
+                if (row < 0 || row > 9)
+                {
+                    std::cout << "Invalid row choice. Please try again.\n";
+                }
+            }
+            while (!(col >= 0 && col < 10)) // Gets an attack col and escapes the loop if the coordinate is inside the board region
+            {
+                col = -1;
+                std::cout << "Select attack column: ";
+                temp = getChar();
+                col = (int(temp) - 65);
+
+                if (col < 0 || col > 9)
+                {
+                    std::cout << "Invalid column choice. Please try again.\n";
+                }
+            }
+        } while (!validAttack(player1, row, col)); // checks to see if the attack location is a spot that the player has already fired on
+
+        attack(player1, opponent, row, col); // actually figures out if it's a hit or miss and marks the boards
+        player1->view();                     // Prints the board again showing the attack
 }
 
 void AI::takeTurnAI(int difficulty)
@@ -401,7 +447,6 @@ void AI::takeTurnAI(int difficulty)
             jPos = rand() % 10;
         } while (!validAttackAI(iPos, jPos));
 
-        cout << "AI has completed its turn!\n";
         attack(opponent, player1, iPos, jPos);
         player1->printPrivateBoard();
     }

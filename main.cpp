@@ -14,7 +14,9 @@ int main()
         cout << "1 for Player VS. AI mode \n";
         cout << "2 for Player1 VS Player2 mode\nMode: ";
         cin >> mode;
-        while (std::cin.fail())
+
+        cout << "";
+        while (std::cin.fail()) //Data Type Validation
 		{
 			std::cin.clear();
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -35,6 +37,6 @@ int main()
         Game battleship;
         battleship.play();  
     }
-    
+
     return(0);
 }

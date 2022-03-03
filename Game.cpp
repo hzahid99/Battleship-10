@@ -71,6 +71,28 @@ void Game::setup()
             cout << "Invalid choice.\nEnter number of ships: ";
     }
 
+    cout << "After how many attacks (1 to 3) would you like to switch turns?\nChoice: ";
+    cin >> attackNum;
+    while (std::cin.fail()) //Data Type Validation
+	{
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cout << "Invalid data type entered. Attack Number must be an integer value (1-3).\nEnter again: ";
+		std::cin >> attackNum;
+	}
+    while (!(attackNum >= 1 && attackNum <= 3 )) //Checks if the input is [1,3]
+    {
+        cout << "Attack Number must be from 1 to 3.\nEnter again: ";
+        cin >> attackNum;
+        while (std::cin.fail()) //Data Type Validation
+		{
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::cout << "Invalid data type entered. Attack Number must be an integer value (1-3).\nEnter again: ";
+			std::cin >> attackNum;
+		}
+    }
+
     // Construct both players with the correct Ship number
     player1 = new Player(numShips);
     player2 = new Player(numShips);
@@ -245,16 +267,26 @@ void Game::play()
 
 void Game::turn(int currentPlayer) // passes control over to the takeTurn function
 {
-
+    int count1 = 1;
+    int count2 = 1;
     if (currentPlayer == 1)
     {
-        std::cout << "Player 1's turn\n";
-        takeTurn(player1, player2);
+        do
+        {
+            std::cout << "Player 1's turn.\n Attack Number " << count1 << "\n";
+            takeTurn(player1, player2);
+            count1++;
+        } while (count1 <= attackNum);
+        
     }
     else
     {
-        std::cout << "Player 2's turn\n";
-        takeTurn(player2, player1);
+        do
+        {
+            std::cout << "Player 2's turn.\n Attack Number " << count1 << "\n";
+            takeTurn(player2, player1);
+            count2++;
+        } while (count2 <= attackNum);
     }
 }
 

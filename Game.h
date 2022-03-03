@@ -21,6 +21,8 @@ private:
 	// Second player of the game
 	Player *player2;
 
+	int attackNum;
+
 public:
 	/*
 	 * @pre none
