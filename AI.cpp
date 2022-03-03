@@ -366,15 +366,24 @@ bool AI::gameover()
 
 void AI::turn(int currentPlayer) // passes control over to the takeTurn function
 {
-    int countPlayer = 1;
-    int countAI = 1;
     if (currentPlayer == 1)
     {
         do
-        {
+        { 
             std::cout << "Player 1's turn\n";
             cout << "\nAttack number " << countPlayer << "\n\n";
             takeTurnPlayer();
+            if (attackNum == 1)
+            {
+                bonusPlayer++;
+                if (bonusPlayer%4 == 0)
+                {
+                    clear();
+                    cout << "Player 1, take your bonus turn\n\n";
+                    takeTurnPlayer();
+                    bonusPlayer = 1;
+                }
+            }
             countPlayer++;
         } while (countPlayer <= attackNum);
         
@@ -386,6 +395,16 @@ void AI::turn(int currentPlayer) // passes control over to the takeTurn function
             cout << "\nAttack number " << countAI << "\n\n";
             takeTurnAI(difficulty);
             countAI++;
+            if (attackNum == 1)
+            {
+                bonusAI++;
+                if (bonusAI%4 == 0)
+                {
+                    cout << "AI is taking the bonus turn\n\n";
+                    takeTurnAI(difficulty);
+                    bonusAI = 1;
+                }
+            }
         } while (countAI <= attackNum);
         cout << "AI has completed its turn!\n";
     }
