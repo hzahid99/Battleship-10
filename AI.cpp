@@ -1,5 +1,8 @@
 #include "AI.h"
 #include "limits"
+#include "stdio.h"
+#include "stdlib.h"
+#include "time.h"
 
 using namespace std;
 
@@ -285,8 +288,9 @@ void AI::setupAI()
         {
             do
             {
-                iStart = rand() % 10;
-                jStart = rand() % 10;
+                srand(time(0)); //Seeds the time so that different sequence of ints is generated each time it is run
+                iStart = rand() % 10; //Will generate a random int [0,10]
+                jStart = rand() % 10; //Will generate a random int [0,10]
                 orientation = rand() % 4 + 1;
 
             } while (!opponent->startValid(iStart, jStart));
