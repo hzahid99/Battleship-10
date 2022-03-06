@@ -13,7 +13,7 @@
 <p>Three difficulty levels for Player vs. AI include:</p>
 <p>i. Easy: It just fires randomly every turn.</p>
 <p>ii. Medium: It fires randomly until it hits a ship then fires in orthogonally adjacent spaces to find other hits until a ship is sunk.</p>
-<p>iii. Hard: Cheater, cheater pumpkin eater! This mode knows where all your ships are and lands a hit every turn.</p>
+<p>iii. Hard: This mode knows where all your ships are and lands a hit every turn.</p>
   
   <p>The turn method will print off whose turn it is and pass control over to the helper function takeTurn. Within it, it will print the player's view and proceed to ask them an attack location. It will continue to ask until a valid location is provided. That information is then passed over to the attack function. If the attack spot has no ships present, it will be marked as a miss. Otherwise, the ship will lose a life, and the spot will be marked as a hit; however, if the ship has lost all of its lives, all the spots associated with that ship will be marked with Xs indicating that it is sunk. A message for the user will display whether it was a hit, miss, or sunk. It will also tell the user which ship was sunk. </p>
     
