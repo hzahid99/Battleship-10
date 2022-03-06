@@ -466,6 +466,7 @@ void AI::takeTurnAI(int difficulty)
     {
         do
         {
+            srand(time(0));
             iPos = rand() % 10;
             jPos = rand() % 10;
         } while (!validAttackAI(iPos, jPos));
@@ -484,6 +485,7 @@ void AI::takeTurnAI(int difficulty)
         {
             do
             {
+                srand(time(0));
                 iPos = rand() % 10;
                 jPos = rand() % 10;
             } while (!validAttackAI(iPos, jPos));
