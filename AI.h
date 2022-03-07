@@ -19,26 +19,27 @@ private:
 	// The first player of the game
 	Player *player1;
 
-    Player *opponent;
+	Player *opponent;
 
-    int difficulty;
+	int difficulty;
 
 	int AiHitCounter;
 
-	int mediumHit[2];
-	bool adjacentHit;
+	int iAdjacent[5] = {-1, -1, -1, -1};
+	int jAdjacent[5] = {-1, -1, -1, -1};
 
-	//For the added feature to the game. Determines after how many atacks to switch turns.
+	bool adjacentHit = false;
+
+	// For the added feature to the game. Determines after how many atacks to switch turns.
 	int attackNum;
 
-	//For the custom addition that gives a bonus move to AI and player after 
-	//the fifth move during a standard (1-attack) mode
+	// For the custom addition that gives a bonus move to AI and player after
+	// the fifth move during a standard (1-attack) mode
 	int bonusAI = 0;
 	int bonusPlayer = 0;
 
-	int countPlayer = 1; //Keeps track of how many attacks the player has used in a turn
-    int countAI = 1; //Keeps track of how many attacks AI has used in a turn
-
+	int countPlayer = 1; // Keeps track of how many attacks the player has used in a turn
+	int countAI = 1;	 // Keeps track of how many attacks AI has used in a turn
 
 public:
 	/*
@@ -72,7 +73,7 @@ public:
 	 */
 	void setupPlayer();
 
-    void setupAI();
+	void setupAI();
 
 	/*
 	 * @pre none
@@ -133,7 +134,7 @@ public:
 	 * @return a bool representing if that target can be fired upon
 	 */
 	bool validAttack(Player *attackingPlayer, int row, int col);
-	bool validAttackAI( int row, int col);
+	bool validAttackAI(int row, int col);
 
 	/*
 	 * @pre none

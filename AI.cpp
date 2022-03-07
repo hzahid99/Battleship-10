@@ -377,7 +377,7 @@ void AI::turn(int currentPlayer) // passes control over to the takeTurn function
             std::cout << "Player 1's turn\n";
             cout << "\nAttack number " << countPlayer << "\n\n";
             takeTurnPlayer();
-            if (attackNum == 1)
+            if (attackNum == 1 && difficulty ==1)
             {
                 bonusPlayer++;
                 if (bonusPlayer%4 == 0)
@@ -399,7 +399,7 @@ void AI::turn(int currentPlayer) // passes control over to the takeTurn function
             cout << "\nAttack number " << countAI << "\n\n";
             takeTurnAI(difficulty);
             countAI++;
-            if (attackNum == 1)
+            if (attackNum == 1 && difficulty ==1)
             {
                 bonusAI++;
                 if (bonusAI%4 == 0)
@@ -475,14 +475,13 @@ void AI::takeTurnAI(int difficulty)
         player1->printPrivateBoard();
     }
 
-    if (difficulty == 2)
+ if (difficulty == 2)
     {
-        //adjacentHit is a bool which is false by default. 
-        //After each succesful hit the surroundings are checked and if there is another ship, adjacentHit = true & coordinates stored in mediumHit
-
-        //If ajacentHit is false, it means that the previous hit doesnt have a ship in the surrounding
-        if (adjacentHit == false) 
+        int count = 0;
+        // If previous hit had no neighbouring ships
+        if (adjacentHit == false)
         {
+            // Random numbers until a valid iPos jPos
             do
             {
                 srand(time(0));
@@ -490,53 +489,65 @@ void AI::takeTurnAI(int difficulty)
                 jPos = rand() % 10;
             } while (!validAttackAI(iPos, jPos));
             cout << "AI has completed its turn!\n";
+            // If the selected iPos jPos is a S, check the wholeboard for the same S (Each has a number with S, S1 for ship1 S2 for ship 2)
+            //at returns a string, we are only interested in the first index of the string, S or *, hence the [0]
+            if (player1->getPublicBoard()->at(iPos, jPos)[0] == 'S')
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    for (int j = 0; j < 10; j++)
+                    {
+                        // Making sure the current attack position isnt added to the array
+                        if (iPos != i || jPos != j)
+                        {
+                            // If same ship found, adjaecntHit is true, coordinates pushed to the array
+                            if (player1->getPrivateBoard()->at(i, j) == player1->getPrivateBoard()->at(iPos, jPos))
+                            {
+                                adjacentHit = true;
+                                iAdjacent[count] = i;
+                                jAdjacent[count] = j;
+                                count++;
+                            }
+                        }
+                    }
+                }
+            }
+            // Attack the board
             attack(opponent, player1, iPos, jPos);
         }
-        //If adjacentHit is true, it means that the previous hit has a ship in the surrounding 
-        if (adjacentHit == true)
+        // If the previous hit had surrounding ships
+        else if (adjacentHit == true)
         {
-            cout << "AI has comepleted its turn!\n";
-            attack(opponent, player1, mediumHit[0], mediumHit[1]);
-        }
-        
-        //After each successful hit, checks the surroundings for another ship
-        //If a ship is found, adjacentHit = true & coordinates for that ship stored in mediumHit[]
-        if (player1->getPublicBoard()->at(iPos, jPos) == "H")
-        {
-            //Checks up
-            if (player1->getPrivateBoard()->at(iPos - 1, jPos)[0] == 'S')
+            // Assume the array with adjacent coordinates is exhausted
+            // Iterate through the array, if -1, ignore, if not, attack and then set array to -1 to show this index is done
+            for (int i = 0; i < 5; i++)
             {
-                adjacentHit = true;
-                mediumHit[0] = iPos-1;
-                mediumHit[1] = jPos;
+                if (iAdjacent[i] != -1 && jAdjacent[i] != -1)
+                {
+                    attack(opponent, player1, iAdjacent[i], jAdjacent[i]);
+                    iAdjacent[i] = -1;
+                    jAdjacent[i] = -1;
+                    break;
+                }
             }
-            //Checks right
-            else if (player1->getPrivateBoard()->at(iPos, jPos + 1)[0] == 'S')
+
+            // Check if the whole array has been exhausted
+            for (int i = 0; i < 5; i++)
             {
-                adjacentHit = true;
-                mediumHit[0] = iPos;
-                mediumHit[1] = jPos+1;
-            }
-            //Checks down
-            else if (player1->getPrivateBoard()->at(iPos + 1, jPos)[0] == 'S')
-            {
-                adjacentHit = true;
-                mediumHit[0] = iPos+1;
-                mediumHit[1] = jPos;
-            }
-            //Checks right
-            else if (player1->getPrivateBoard()->at(iPos, jPos - 1)[0] == 'S')
-            {
-                adjacentHit = true;
-                mediumHit[0] = iPos;
-                mediumHit[1] = jPos-1;
-            }
-            //If no ship in surrounding, adjacentHit is false
-            else
-            {
-                adjacentHit = false;
+                //Check 1 index, if not -1 then arr is  not empty and adjacentHit is true
+                if (iAdjacent[i] != -1 && jAdjacent[i] != -1)
+                {
+                    adjacentHit = true;
+                }
+                //Check the same index, if -1 then arr is empty and adjacentHit is false
+                if (iAdjacent[i] == -1 && jAdjacent[i] == -1)
+                {
+                    adjacentHit = false;
+                }
+                //Keep doing this until the whole array has been checked 
             }
         }
+
         player1->printPrivateBoard();
     }
 
