@@ -546,7 +546,12 @@ void AI::takeTurnAI(int difficulty)
           }
       }*/
 
-        bool stop = false; 
+//We will unable to fully implement the medium difficulty as stated in the project requirements,
+//so for the sake of having a fully functional game, we commented out that code above and implemented
+//our own medium diffculty where every multiple of 3's turn is a confirmed hit, while others are
+//random.
+
+        bool stop = false; // To allow us to break out of the nested loop
         if (mediumCount % 3 == 0)
         {
             for (int i = 0; i < 10; i++)
@@ -559,13 +564,13 @@ void AI::takeTurnAI(int difficulty)
                         stop = true;
                         break;
                     }
-                    
-                    if (stop == true)
+                }
+
+                if (stop == true)
                     {
                         stop = false;
                         break;
                     }
-                }
             }
         }
 
