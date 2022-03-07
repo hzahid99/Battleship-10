@@ -555,6 +555,7 @@ void AI::takeTurnAI(int difficulty)
                     if (player1->getPrivateBoard()->at(i, j)[0] == 'S')
                     {
                         attack(opponent, player1, i, j);
+                        break;
                         
                     }
                 }
