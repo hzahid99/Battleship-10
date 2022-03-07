@@ -128,7 +128,7 @@ void AI::setup()
         {
             cout << "Please enter a number between 1 and 3 (including both): ";
             cin >> difficulty;
-            while (std::cin.fail()) //Data Type Validation
+            while (std::cin.fail()) // Data Type Validation
             {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -141,26 +141,25 @@ void AI::setup()
 
     cout << "After how many attacks (1 to 3) would you like to switch turns?\nChoice: ";
     cin >> attackNum;
-    while (std::cin.fail()) //Data Type Validation
-	{
-		std::cin.clear();
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		std::cout << "Invalid data type entered. Attack Number must be an integer value (1-3).\nEnter again: ";
-		std::cin >> attackNum;
-	}
-    while (!(attackNum >= 1 && attackNum <= 3 )) //Checks if the input is [1,3]
+    while (std::cin.fail()) // Data Type Validation
+    {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Invalid data type entered. Attack Number must be an integer value (1-3).\nEnter again: ";
+        std::cin >> attackNum;
+    }
+    while (!(attackNum >= 1 && attackNum <= 3)) // Checks if the input is [1,3]
     {
         cout << "Attack Number must be from 1 to 3.\nEnter again: ";
         cin >> attackNum;
-        while (std::cin.fail()) //Data Type Validation
-		{
-			std::cin.clear();
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-			std::cout << "Invalid data type entered. Attack Number must be an integer value (1-3).\nEnter again: ";
-			std::cin >> attackNum;
-		}
+        while (std::cin.fail()) // Data Type Validation
+        {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid data type entered. Attack Number must be an integer value (1-3).\nEnter again: ";
+            std::cin >> attackNum;
+        }
     }
-    
 
     player1 = new Player(numShips);
     opponent = new Player(numShips);
@@ -288,9 +287,9 @@ void AI::setupAI()
         {
             do
             {
-                srand(time(0)); //Seeds the time so that different sequence of ints is generated each time it is run
-                iStart = rand() % 10; //Will generate a random int [0,10]
-                jStart = rand() % 10; //Will generate a random int [0,10]
+                srand(time(0));       // Seeds the time so that different sequence of ints is generated each time it is run
+                iStart = rand() % 10; // Will generate a random int [0,10]
+                jStart = rand() % 10; // Will generate a random int [0,10]
                 orientation = rand() % 4 + 1;
 
             } while (!opponent->startValid(iStart, jStart));
@@ -373,14 +372,14 @@ void AI::turn(int currentPlayer) // passes control over to the takeTurn function
     if (currentPlayer == 1)
     {
         do
-        { 
+        {
             std::cout << "Player 1's turn\n";
             cout << "\nAttack number " << countPlayer << "\n\n";
             takeTurnPlayer();
-            if (attackNum == 1 && difficulty ==1)
+            if (attackNum == 1 && difficulty == 1)
             {
                 bonusPlayer++;
-                if (bonusPlayer%4 == 0)
+                if (bonusPlayer % 4 == 0)
                 {
                     clear();
                     cout << "Player 1, take your bonus turn\n\n";
@@ -390,7 +389,6 @@ void AI::turn(int currentPlayer) // passes control over to the takeTurn function
             }
             countPlayer++;
         } while (countPlayer <= attackNum);
-        
     }
     else
     {
@@ -399,10 +397,10 @@ void AI::turn(int currentPlayer) // passes control over to the takeTurn function
             cout << "\nAttack number " << countAI << "\n\n";
             takeTurnAI(difficulty);
             countAI++;
-            if (attackNum == 1 && difficulty ==1)
+            if (attackNum == 1 && difficulty == 1)
             {
                 bonusAI++;
-                if (bonusAI%4 == 0)
+                if (bonusAI % 4 == 0)
                 {
                     cout << "AI is taking the bonus turn\n\n";
                     takeTurnAI(difficulty);
@@ -423,39 +421,39 @@ void AI::takeTurnPlayer()
 
     player1->view(); // prints the boards and ship health
 
-        do // stuck in a loop until the player produces a valid attack location
+    do // stuck in a loop until the player produces a valid attack location
+    {
+        row = -1;
+        col = -1;
+
+        while (!(row >= 0 && row < 10)) // Gets an attack row and only accepts it if it's within board
         {
             row = -1;
+            std::cout << "Select attack row: ";
+            row = getInt();
+            row -= 1;
+
+            if (row < 0 || row > 9)
+            {
+                std::cout << "Invalid row choice. Please try again.\n";
+            }
+        }
+        while (!(col >= 0 && col < 10)) // Gets an attack col and escapes the loop if the coordinate is inside the board region
+        {
             col = -1;
+            std::cout << "Select attack column: ";
+            temp = getChar();
+            col = (int(temp) - 65);
 
-            while (!(row >= 0 && row < 10)) // Gets an attack row and only accepts it if it's within board
+            if (col < 0 || col > 9)
             {
-                row = -1;
-                std::cout << "Select attack row: ";
-                row = getInt();
-                row -= 1;
-
-                if (row < 0 || row > 9)
-                {
-                    std::cout << "Invalid row choice. Please try again.\n";
-                }
+                std::cout << "Invalid column choice. Please try again.\n";
             }
-            while (!(col >= 0 && col < 10)) // Gets an attack col and escapes the loop if the coordinate is inside the board region
-            {
-                col = -1;
-                std::cout << "Select attack column: ";
-                temp = getChar();
-                col = (int(temp) - 65);
+        }
+    } while (!validAttack(player1, row, col)); // checks to see if the attack location is a spot that the player has already fired on
 
-                if (col < 0 || col > 9)
-                {
-                    std::cout << "Invalid column choice. Please try again.\n";
-                }
-            }
-        } while (!validAttack(player1, row, col)); // checks to see if the attack location is a spot that the player has already fired on
-
-        attack(player1, opponent, row, col); // actually figures out if it's a hit or miss and marks the boards
-        player1->view();                     // Prints the board again showing the attack
+    attack(player1, opponent, row, col); // actually figures out if it's a hit or miss and marks the boards
+    player1->view();                     // Prints the board again showing the attack
 }
 
 void AI::takeTurnAI(int difficulty)
@@ -475,80 +473,108 @@ void AI::takeTurnAI(int difficulty)
         player1->printPrivateBoard();
     }
 
- if (difficulty == 2)
-    {
-        int count = 0;
-        // If previous hit had no neighbouring ships
-        if (adjacentHit == false)
+    if (difficulty == 2)
+    { /*
+      int count = 0;
+      // If previous hit had no neighbouring ships
+      if (adjacentHit == false)
+      {
+          // Random numbers until a valid iPos jPos
+          do
+          {
+              srand(time(0));
+              iPos = rand() % 10;
+              jPos = rand() % 10;
+          } while (!validAttackAI(iPos, jPos));
+          cout << "AI has completed its turn!\n";
+          // If the selected iPos jPos is a S, check the wholeboard for the same S (Each has a number with S, S1 for ship1 S2 for ship 2)
+          //at returns a string, we are only interested in the first index of the string, S or *, hence the [0]
+          if (player1->getPublicBoard()->at(iPos, jPos)[0] == 'S')
+          {
+              for (int i = 0; i < 10; i++)
+              {
+                  for (int j = 0; j < 10; j++)
+                  {
+                      // Making sure the current attack position isnt added to the array
+                      if (iPos != i || jPos != j)
+                      {
+                          // If same ship found, adjaecntHit is true, coordinates pushed to the array
+                          if (player1->getPrivateBoard()->at(i, j) == player1->getPrivateBoard()->at(iPos, jPos))
+                          {
+                              adjacentHit = true;
+                              iAdjacent[count] = i;
+                              jAdjacent[count] = j;
+                              count++;
+                          }
+                      }
+                  }
+              }
+          }
+          // Attack the board
+          attack(opponent, player1, iPos, jPos);
+      }
+      // If the previous hit had surrounding ships
+      else if (adjacentHit == true)
+      {
+          // Assume the array with adjacent coordinates is exhausted
+          // Iterate through the array, if -1, ignore, if not, attack and then set array to -1 to show this index is done
+          for (int i = 0; i < 5; i++)
+          {
+              if (iAdjacent[i] != -1 && jAdjacent[i] != -1)
+              {
+                  attack(opponent, player1, iAdjacent[i], jAdjacent[i]);
+                  iAdjacent[i] = -1;
+                  jAdjacent[i] = -1;
+                  break;
+              }
+          }
+
+          // Check if the whole array has been exhausted
+          for (int i = 0; i < 5; i++)
+          {
+              //Check 1 index, if not -1 then arr is  not empty and adjacentHit is true
+              if (iAdjacent[i] != -1 && jAdjacent[i] != -1)
+              {
+                  adjacentHit = true;
+              }
+              //Check the same index, if -1 then arr is empty and adjacentHit is false
+              if (iAdjacent[i] == -1 && jAdjacent[i] == -1)
+              {
+                  adjacentHit = false;
+              }
+              //Keep doing this until the whole array has been checked
+          }
+      }*/
+
+        if (mediumCount % 3 == 0)
         {
-            // Random numbers until a valid iPos jPos
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    if (player1->getPrivateBoard()->at(i, j)[0] == 'S')
+                    {
+                        attack(opponent, player1, i, j);
+                        
+                    }
+                }
+            }
+        }
+
+        else
+        {
             do
             {
                 srand(time(0));
                 iPos = rand() % 10;
                 jPos = rand() % 10;
             } while (!validAttackAI(iPos, jPos));
-            cout << "AI has completed its turn!\n";
-            // If the selected iPos jPos is a S, check the wholeboard for the same S (Each has a number with S, S1 for ship1 S2 for ship 2)
-            //at returns a string, we are only interested in the first index of the string, S or *, hence the [0]
-            if (player1->getPublicBoard()->at(iPos, jPos)[0] == 'S')
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    for (int j = 0; j < 10; j++)
-                    {
-                        // Making sure the current attack position isnt added to the array
-                        if (iPos != i || jPos != j)
-                        {
-                            // If same ship found, adjaecntHit is true, coordinates pushed to the array
-                            if (player1->getPrivateBoard()->at(i, j) == player1->getPrivateBoard()->at(iPos, jPos))
-                            {
-                                adjacentHit = true;
-                                iAdjacent[count] = i;
-                                jAdjacent[count] = j;
-                                count++;
-                            }
-                        }
-                    }
-                }
-            }
-            // Attack the board
+
             attack(opponent, player1, iPos, jPos);
         }
-        // If the previous hit had surrounding ships
-        else if (adjacentHit == true)
-        {
-            // Assume the array with adjacent coordinates is exhausted
-            // Iterate through the array, if -1, ignore, if not, attack and then set array to -1 to show this index is done
-            for (int i = 0; i < 5; i++)
-            {
-                if (iAdjacent[i] != -1 && jAdjacent[i] != -1)
-                {
-                    attack(opponent, player1, iAdjacent[i], jAdjacent[i]);
-                    iAdjacent[i] = -1;
-                    jAdjacent[i] = -1;
-                    break;
-                }
-            }
-
-            // Check if the whole array has been exhausted
-            for (int i = 0; i < 5; i++)
-            {
-                //Check 1 index, if not -1 then arr is  not empty and adjacentHit is true
-                if (iAdjacent[i] != -1 && jAdjacent[i] != -1)
-                {
-                    adjacentHit = true;
-                }
-                //Check the same index, if -1 then arr is empty and adjacentHit is false
-                if (iAdjacent[i] == -1 && jAdjacent[i] == -1)
-                {
-                    adjacentHit = false;
-                }
-                //Keep doing this until the whole array has been checked 
-            }
-        }
-
+        cout << "AI has completed its turn!\n";
         player1->printPrivateBoard();
+        mediumCount++;
     }
 
     if (difficulty == 3)
@@ -557,7 +583,7 @@ void AI::takeTurnAI(int difficulty)
         {
             for (int j = 0; j < 10; j++)
             {
-                if (player1->getPrivateBoard()->at(i,j)[0] == 'S')
+                if (player1->getPrivateBoard()->at(i, j)[0] == 'S')
                 {
                     cout << "AI has completed its turn!\n";
                     attack(opponent, player1, i, j);
