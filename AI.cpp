@@ -546,10 +546,10 @@ void AI::takeTurnAI(int difficulty)
           }
       }*/
 
-//We will unable to fully implement the medium difficulty as stated in the project requirements,
-//so for the sake of having a fully functional game, we commented out that code above and implemented
-//our own medium diffculty where every multiple of 3's turn is a confirmed hit, while others are
-//random.
+        // We will unable to fully implement the medium difficulty as stated in the project requirements,
+        // so for the sake of having a fully functional game, we commented out that code above and implemented
+        // our own medium diffculty where every multiple of 3's turn is a confirmed hit, while others are
+        // random.
 
         bool stop = false; // To allow us to break out of the nested loop
         if (mediumCount % 3 == 0)
@@ -561,16 +561,12 @@ void AI::takeTurnAI(int difficulty)
                     if (player1->getPrivateBoard()->at(i, j)[0] == 'S')
                     {
                         attack(opponent, player1, i, j);
-                        stop = true;
-                        break;
+                        mediumCount++;
+                        cout << "AI has completed its turn!\n";
+                        player1->printPrivateBoard();
+                        return;
                     }
                 }
-
-                if (stop == true)
-                    {
-                        stop = false;
-                        break;
-                    }
             }
         }
 
@@ -584,10 +580,11 @@ void AI::takeTurnAI(int difficulty)
             } while (!validAttackAI(iPos, jPos));
 
             attack(opponent, player1, iPos, jPos);
+            mediumCount++;
+            cout << "AI has completed its turn!\n";
+            player1->printPrivateBoard();
+            return;
         }
-        cout << "AI has completed its turn!\n";
-        player1->printPrivateBoard();
-        mediumCount++;
     }
 
     if (difficulty == 3)
