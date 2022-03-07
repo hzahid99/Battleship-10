@@ -546,6 +546,7 @@ void AI::takeTurnAI(int difficulty)
           }
       }*/
 
+        bool stop = false; 
         if (mediumCount % 3 == 0)
         {
             for (int i = 0; i < 10; i++)
@@ -555,8 +556,14 @@ void AI::takeTurnAI(int difficulty)
                     if (player1->getPrivateBoard()->at(i, j)[0] == 'S')
                     {
                         attack(opponent, player1, i, j);
+                        stop = true;
                         break;
-                        
+                    }
+                    
+                    if (stop == true)
+                    {
+                        stop = false;
+                        break;
                     }
                 }
             }
